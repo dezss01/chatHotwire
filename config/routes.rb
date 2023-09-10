@@ -3,5 +3,7 @@ Rails.application.routes.draw do
   root "rooms#index"
 
   resources :rooms, only: %i[show create], param: :title
-  resources :messages, only: %i[create]
+  resources :messages, only: %i[create] do
+    member { post :like }
+  end
 end
