@@ -1,1 +1,14 @@
-<h1>Хуита</h1>
+<%= turbo_stream_from :rooms %>
+<%= turbo_frame_tag :rooms do %>
+  <%=  render @rooms %>
+<% end %>
+
+
+<% if user_signed_in? %>
+  <%= form_with model: @new_room, class: 'mt-4' do |f| %>
+    <%= f.submit "Новая комната", class: "flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold
+                       leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2
+                       focus-visible:outline-offset-2 focus-visible:outline-indigo-600 w-32 cursor-pointer" %>
+
+  <% end %>
+<% end %>
