@@ -10,14 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_09_185038) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_10_110051) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "messages", force: :cascade do |t|
-    t.string "body"
+  create_table "likes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "message_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["message_id"], name: "index_likes_on_message_id"
+    t.index ["user_id", "message_id"], name: "index_likes_on_user_id_and_message_id", unique: true
+    t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "rooms_id", null: false
+    t.string "body", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "likes_count", default: 0, null: false
+    t.index ["rooms_id"], name: "index_messages_on_rooms_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -47,5 +62,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_09_185038) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "likes", "messages"
+  add_foreign_key "likes", "users"
+  add_foreign_key "messages", "rooms", column: "rooms_id"
+  add_foreign_key "messages", "users"
   add_foreign_key "rooms", "users"
 end
